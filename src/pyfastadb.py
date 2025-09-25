@@ -104,3 +104,12 @@ class Client:
             i = i.split()
             dev.append((i[0], i[1]))
         return dev or None
+
+##  // Device Class //
+
+class Device:
+    def __init__(self, client, serial):
+        self.serial = serial
+        self._adb_path = client.adb_path
+        self._fastboot_path = client.fastboot_path
+        self.adb = adb(self._adb_path)
