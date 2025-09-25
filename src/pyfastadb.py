@@ -60,11 +60,15 @@ class adb:
 
     def adb_command(self, command):
         res = subprocess.run([self._adb_path, command], capture_output=True, text=True)
-        return res.stdout
+        if res.returncode != 0:
+            raise Error(res.stderr)
+        return res
 
     def device_adb_command(self, device, command):
         res = subprocess.run([self._adb_path, "-s", device.serial, *command.split()], capture_output=True, text=True)
-        return res.stdout
+        if res.returncode != 0:
+            raise Error(res.stderr)
+        return res
 
 ##  // Fastboot class //
 
@@ -74,11 +78,15 @@ class fastboot:
 
     def fastboot_command(self, command):
         res = subprocess.run([self._fastboot_path, command], capture_output=True, text=True)
-        return res.stdout
+        if res.returncode != 0:
+            raise Error(res.stderr)
+        return res
 
     def device_fastboot_command(self, device, command):
         res = subprocess.run([self._fastboot_path, "-s", device.serial, *command.split()], capture_output=True, text=True)
-        return res.stdout
+        if res.returncode != 0:
+            raise Error(res.stderr)
+        return res
 
 ##  // Client Class //
 
@@ -97,7 +105,7 @@ class Client:
 
     def get_adb_devices(self):
         res = self.adb.adb_command("devices")
-        res = res.strip().splitlines()
+        res = res.stdout.strip().splitlines()
         dev = []
         for i in res[1:]:
             i = i.split()
@@ -106,7 +114,7 @@ class Client:
 
     def get_fastboot_devices(self):
         res = self.fastboot.fastboot_command("devices")
-        res = res.strip().splitlines()
+        res = res.stdout.strip().splitlines()
         dev = []
         for i in res:
             i = i.split()
