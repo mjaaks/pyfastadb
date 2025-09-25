@@ -56,33 +56,34 @@ class Error(Exception):
 
 class adb:
     def __init__(self, adb_path=None):
-        self.adb_path = adb_path
+        self._adb_path = adb_path
 
     def adb_command(self, command):
-        res = subprocess.run([self.adb_path, command], capture_output=True, text=True)
+        res = subprocess.run([self._adb_path, command], capture_output=True, text=True)
         return res.stdout
 
 ##  // Fastboot class //
 
 class fastboot:
     def __init__(self, fastboot_path=None):
-        self.fastboot_path = fastboot_path
+        self._fastboot_path = fastboot_path
 
     def fastboot_command(self, command):
-        res = subprocess.run([self.fastboot_path, command], capture_output=True, text=True)
+        res = subprocess.run([self._fastboot_path, command], capture_output=True, text=True)
         return res.stdout
 
 ##  // Client Class //
 
 class Client:
     def __init__(self, adb_path=None, fastboot_path=None):
-        self.adb_path = adb_path
-        self.fastboot_path = fastboot_path
-        if find_adb(custom_path=self.adb_path, return_as_bool=True) == False:
+        self._adb_path = adb_path
+        self._fastboot_path = fastboot_path
+        if find_adb(custom_path=self._adb_path, return_as_bool=True) == False:
             raise Error('adb_path is not a valid path to adb.exe')
-        if find_fastboot(custom_path=self.fastboot_path, return_as_bool=True) == False:
+        if find_fastboot(custom_path=self._fastboot_path, return_as_bool=True) == False:
             raise Error('fastboot_path is not a valid path to fastboot.exe')
-        self.adb = adb(self.adb_path)
+        self.adb = adb(self._adb_path)
+        self.fastboot = fastboot(self._fastboot_path)
 
     ##  // More setup assists //
 
@@ -91,6 +92,15 @@ class Client:
         res = res.strip().splitlines()
         dev = []
         for i in res[1:]:
+            i = i.split()
+            dev.append((i[0], i[1]))
+        return dev or None
+
+    def get_fastboot_devices(self):
+        res = self.fastboot.fastboot_command("devices")
+        res = res.strip().splitlines()
+        dev = []
+        for i in res:
             i = i.split()
             dev.append((i[0], i[1]))
         return dev or None
