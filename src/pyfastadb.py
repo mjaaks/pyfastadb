@@ -62,6 +62,10 @@ class adb:
         res = subprocess.run([self._adb_path, command], capture_output=True, text=True)
         return res.stdout
 
+    def device_adb_command(self, device, command):
+        res = subprocess.run([self._adb_path, "-s", device.serial, command], capture_output=True, text=True)
+        return res.stdout
+
 ##  // Fastboot class //
 
 class fastboot:
@@ -70,6 +74,10 @@ class fastboot:
 
     def fastboot_command(self, command):
         res = subprocess.run([self._fastboot_path, command], capture_output=True, text=True)
+        return res.stdout
+
+    def device_fastboot_command(self, device, command):
+        res = subprocess.run([self._fastboot_path, "-s", device.serial, command], capture_output=True, text=True)
         return res.stdout
 
 ##  // Client Class //
@@ -110,9 +118,9 @@ class Client:
 class Device:
     def __init__(self, client, serial):
         self.serial = serial
-        self._adb_path = client.adb_path
-        self._fastboot_path = client.fastboot_path
+        self._adb_path = client._adb_path
+        self._fastboot_path = client._fastboot_path
         self.adb = adb(self._adb_path)
 
     def reboot(self, reboot_type=""):
-        self.adb.adb_command(f"reboot {reboot_type}")
+        self.adb.device_adb_command(self, f"reboot {reboot_type}")
