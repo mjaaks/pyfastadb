@@ -120,6 +120,7 @@ class Device:
         self.serial = serial
         self._adb_path = client._adb_path
         self._fastboot_path = client._fastboot_path
+        self._client = client
         self.adb = adb(self._adb_path)
 
     def reboot(self, reboot_type=""):
@@ -127,3 +128,16 @@ class Device:
 
     def wait_for_device(self):
         self.adb.device_adb_command(self, "wait-for-device")
+
+    def wait_for_recovery(self):
+        self.adb.device_adb_command(self, "wait-for-device")
+
+    def wait_for_sideload(self):
+        self.adb.device_adb_command(self, "wait-for-device")
+
+    def wait_for_bootloader(self):
+        while True:
+            dev = self._client.get_fastboot_devices() or []
+            for i in dev:
+                if i[0] == self.serial: return
+        time.sleep(0.25)
