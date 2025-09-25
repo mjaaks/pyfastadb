@@ -121,11 +121,11 @@ class Client:
             dev.append((i[0], i[1]))
         return dev or None
 
-    def start(self):
-        self.adb.adb_command("start-server")
-
     def kill(self):
         self.adb.adb_command("kill-server")
+
+    def start(self):
+        self.adb.adb_command("start-server")
 
 ##  // Device Class //
 
