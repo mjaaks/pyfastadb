@@ -49,7 +49,7 @@ def find_fastboot(return_as_bool=False, custom_path=None):
 
 ##  // Error Handling //
 
-class FastadbException(Exception):
+class Error(Exception):
     pass
 
 ##  // Adb class //
@@ -79,9 +79,9 @@ class Client:
         self.adb_path = adb_path
         self.fastboot_path = fastboot_path
         if find_adb(custom_path=self.adb_path, return_as_bool=True) == False:
-            raise FastadbException('adb_path is not a valid path to adb.exe')
+            raise Error('adb_path is not a valid path to adb.exe')
         if find_fastboot(custom_path=self.fastboot_path, return_as_bool=True) == False:
-            raise FastadbException('fastboot_path is not a valid path to fastboot.exe')
+            raise Error('fastboot_path is not a valid path to fastboot.exe')
         self.adb = adb(self.adb_path)
 
     ##  // More setup assists //
