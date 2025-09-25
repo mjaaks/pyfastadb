@@ -121,6 +121,14 @@ class Client:
             dev.append((i[0], i[1]))
         return dev or None
 
+    @staticmethod
+    def start():
+        adb.adb_command("start-server")
+
+    @staticmethod
+    def kill(self):
+        adb.adb_command("kill-server")
+
 ##  // Device Class //
 
 class Device:
