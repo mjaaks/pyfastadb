@@ -149,3 +149,6 @@ class Device:
 
     def push(self, source, destination):
         self.adb.device_adb_command(self, f"push {source} {destination}")
+
+    def pull(self, source, destination):
+        self.adb.device_adb_command(self, f"pull {source} {destination}")
