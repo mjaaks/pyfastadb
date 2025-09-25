@@ -146,3 +146,6 @@ class Device:
                         if i[0] == self.serial: return
                 time.sleep(0.25)
             case _: raise Error("state arg for wait_for_state is invalid")
+
+    def push(self, source, destination):
+        self.adb.device_adb_command(self, f"push {source} {destination}")
