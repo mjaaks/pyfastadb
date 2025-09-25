@@ -126,18 +126,15 @@ class Device:
     def reboot(self, reboot_type=""):
         self.adb.device_adb_command(self, f"reboot {reboot_type}")
 
-    def wait_for_device(self):
-        self.adb.device_adb_command(self, "wait-for-device")
-
-    def wait_for_recovery(self):
-        self.adb.device_adb_command(self, "wait-for-device")
-
-    def wait_for_sideload(self):
-        self.adb.device_adb_command(self, "wait-for-device")
-
-    def wait_for_bootloader(self):
-        while True:
-            dev = self._client.get_fastboot_devices() or []
-            for i in dev:
-                if i[0] == self.serial: return
-        time.sleep(0.25)
+    def wait_for_state(self, state):
+        match state:
+            case "device": self.adb.device_adb_command(self, "wait-for-device")
+            case "recovery": self.adb.device_adb_command(self, "wait-for-recovery")
+            case "sideload": self.adb.device_adb_command(self, "wait-for-sideload")
+            case "bootloader":
+                while True:
+                    dev = self._client.get_fastboot_devices() or []
+                    for i in dev:
+                        if i[0] == self.serial: return
+                time.sleep(0.25)
+            case _: raise Error("state arg for wait_for_state is invalid")
