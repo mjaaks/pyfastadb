@@ -124,3 +124,6 @@ class Device:
 
     def reboot(self, reboot_type=""):
         self.adb.device_adb_command(self, f"reboot {reboot_type}")
+
+    def wait_for_device(self):
+        self.adb.device_adb_command(self, "wait-for-device")
