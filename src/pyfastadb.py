@@ -113,3 +113,6 @@ class Device:
         self._adb_path = client.adb_path
         self._fastboot_path = client.fastboot_path
         self.adb = adb(self._adb_path)
+
+    def reboot(self, reboot_type=""):
+        self.adb.adb_command(f"reboot {reboot_type}")
