@@ -162,3 +162,9 @@ class Device:
 
     def pull(self, source, destination):
         self.adb.device_adb_command(self, f"pull {source} {destination}")
+
+    def flash_partition(self, partition, source):
+        self.fastboot.device_fastboot_command(self, f"flash {partition} {source}")
+
+    def sideload(self, source):
+        self.adb.device_adb_command(self, f"sideload {source}")
