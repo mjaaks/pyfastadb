@@ -138,6 +138,8 @@ class Device:
         self.adb = adb(self._adb_path)
         self.fastboot = fastboot(self._fastboot_path)
 
+    ##  // REBOOTING //
+
     def reboot_adb(self, reboot_type=""):
         self.adb.device_adb_command(self, f"reboot {reboot_type}")
 
@@ -157,14 +159,39 @@ class Device:
                     time.sleep(0.25)
             case _: raise Error("state arg for wait_for_state is invalid")
 
+    ##  // ADB FUNCTIONS //
+
     def push(self, source, destination):
         self.adb.device_adb_command(self, f"push {source} {destination}")
 
     def pull(self, source, destination):
         self.adb.device_adb_command(self, f"pull {source} {destination}")
 
+    def sideload(self, source):
+        self.adb.device_adb_command(self, f"sideload {source}")
+
+    ##  // FASTBOOT FUNCTIONS //
+
     def flash_partition(self, partition, source):
         self.fastboot.device_fastboot_command(self, f"flash {partition} {source}")
 
-    def sideload(self, source):
-        self.adb.device_adb_command(self, f"sideload {source}")
+    def unlock_flashing(self):
+        self.fastboot.device_fastboot_command(self, "flashing unlock")
+
+    def lock_flashing(self):
+        self.fastboot.device_fastboot_command(self, "flashing lock")
+
+    def unlock_critical_flashing(self):
+        self.fastboot.device_fastboot_command(self, "flashing unlock_critical")
+
+    def lock_critical_flashing(self):
+        self.fastboot.device_fastboot_command(self, "flashing lock_critical")
+
+    def get_unlock_ability(self):
+        res = self.fastboot.device_fastboot_command(self, "flashing get_unlock_ability")
+        res = res.stderr.splitlines()
+        res = res[0].strip().split()
+        if res[2] is "1":
+            return True
+        else:
+            return False
