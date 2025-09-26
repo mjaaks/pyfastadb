@@ -154,7 +154,7 @@ class Device:
                     dev = self._client.get_fastboot_devices() or []
                     for i in dev:
                         if i[0] == self.serial: return
-                time.sleep(0.25)
+                    time.sleep(0.25)
             case _: raise Error("state arg for wait_for_state is invalid")
 
     def push(self, source, destination):
