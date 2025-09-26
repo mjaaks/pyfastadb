@@ -138,7 +138,7 @@ class Device:
         self.adb = adb(self._adb_path)
         self.fastboot = fastboot(self._fastboot_path)
 
-    ##  // REBOOTING //
+    ##  // SCRIPTING //
 
     def reboot_adb(self, reboot_type=""):
         self.adb.device_adb_command(self, f"reboot {reboot_type}")
