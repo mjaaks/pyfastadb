@@ -136,9 +136,13 @@ class Device:
         self._fastboot_path = client._fastboot_path
         self._client = client
         self.adb = adb(self._adb_path)
+        self.fastboot = fastboot(self._fastboot_path)
 
-    def reboot(self, reboot_type=""):
+    def reboot_adb(self, reboot_type=""):
         self.adb.device_adb_command(self, f"reboot {reboot_type}")
+
+    def reboot_fastboot(self, reboot_type=""):
+        self.fastboot.device_fastboot_command(self, f"reboot {reboot_type}")
 
     def wait_for_state(self, state):
         match state:
